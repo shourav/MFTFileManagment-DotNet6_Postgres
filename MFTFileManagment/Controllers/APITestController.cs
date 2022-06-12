@@ -9,11 +9,13 @@ namespace MFTFileManagment.Controllers
     {
 
         private readonly FileDataContext _context;
+        private readonly ILogger<APITestController> _logger;
 
         //Dependency Injection through Constructor
-        public APITestController(FileDataContext context)
+        public APITestController(FileDataContext context, ILogger<APITestController> logger)
         {
             this._context = context;
+            _logger = logger;
         }
 
 
@@ -24,8 +26,8 @@ namespace MFTFileManagment.Controllers
         [Route("GetFilesFromDB")]
         public async Task<ActionResult<List<FileViewModel>>> GetFilesFromDB()
         {
-
-            return Ok(await this._context.Files.Select(f => new FileViewModel
+            this._logger.LogInformation("GetFilesFromDB: ");
+            var ret = await this._context.Files.Select(f => new FileViewModel
             {
                 Id = f.Id,
                 Name = f.Name,
@@ -34,7 +36,10 @@ namespace MFTFileManagment.Controllers
                 MakeBy = f.MakeBy,
                 MakeDate = f.MakeDate,
                 Remarks = f.Remarks
-            }).OrderBy(i => i.Id).ToListAsync());
+            }).OrderBy(i => i.Id).ToListAsync();
+            var combined = string.Join(", ", ret);
+            this._logger.LogInformation("Response Data: " + System.Environment.NewLine + combined.ToString());
+            return Ok(ret);
         }
 
         //Get single file by id from database
@@ -42,10 +47,14 @@ namespace MFTFileManagment.Controllers
         [Route("GetFileById")]
         public async Task<ActionResult<FileViewModel>> GetFileById(long id)
         {
+            this._logger.LogInformation("GetFileById: " + id.ToString());
             var dbFile = await this._context.Files.FindAsync(id);
             if (dbFile == null)
+            {
+                this._logger.LogInformation("File not found!");
                 return BadRequest("File not found!");
-            return Ok(new FileViewModel
+            }
+            FileViewModel ret = new FileViewModel
             {
                 Id = dbFile.Id,
                 Name = dbFile.Name,
@@ -54,7 +63,9 @@ namespace MFTFileManagment.Controllers
                 MakeBy = dbFile.MakeBy,
                 MakeDate = dbFile.MakeDate,
                 Remarks = dbFile.Remarks
-            });
+            };
+            this._logger.LogInformation("Response Data: " + System.Environment.NewLine + ret.ToString());
+            return Ok(ret);
         }
 
         //Add a new file in database
@@ -62,7 +73,7 @@ namespace MFTFileManagment.Controllers
         [Route("AddFilesInDB")]
         public async Task<ActionResult<List<FileViewModel>>> AddFilesInDB(FileViewModel file)
         {
-
+            this._logger.LogInformation("AddFilesInDB: " + System.Environment.NewLine + file.ToString());
             this._context.Files.Add(new Documents.Data.File
             {
                 Name = file.Name,
@@ -74,7 +85,7 @@ namespace MFTFileManagment.Controllers
             });
             await this._context.SaveChangesAsync();
 
-            return Ok(await this._context.Files.Select(f => new FileViewModel
+            var ret = await this._context.Files.Select(f => new FileViewModel
             {
                 Id = f.Id,
                 Name = f.Name,
@@ -83,7 +94,10 @@ namespace MFTFileManagment.Controllers
                 MakeBy = f.MakeBy,
                 MakeDate = f.MakeDate,
                 Remarks = f.Remarks
-            }).OrderBy(i => i.Id).ToListAsync());
+            }).OrderBy(i => i.Id).ToListAsync();
+            var combined = string.Join(", ", ret);
+            this._logger.LogInformation("Response Data: " + System.Environment.NewLine + combined.ToString());
+            return Ok(ret);
         }
 
         //Update a file in database
@@ -91,6 +105,7 @@ namespace MFTFileManagment.Controllers
         [Route("UpdateFileInDB")]
         public async Task<ActionResult<List<FileViewModel>>> UpdateFileInDB(FileViewModel request)
         {
+            this._logger.LogInformation("UpdateFileInDB: " + System.Environment.NewLine + request.ToString());
             var dbFile = await this._context.Files.FindAsync(request.Id);
             if (dbFile == null)
                 return BadRequest("File not found!");
@@ -104,7 +119,7 @@ namespace MFTFileManagment.Controllers
 
             await this._context.SaveChangesAsync();
 
-            return Ok(await this._context.Files.Select(f => new FileViewModel
+            var ret = await this._context.Files.Select(f => new FileViewModel
             {
                 Id = f.Id,
                 Name = f.Name,
@@ -113,7 +128,10 @@ namespace MFTFileManagment.Controllers
                 MakeBy = f.MakeBy,
                 MakeDate = f.MakeDate,
                 Remarks = f.Remarks
-            }).OrderBy(i => i.Id).ToListAsync());
+            }).OrderBy(i => i.Id).ToListAsync();
+            var combined = string.Join(", ", ret);
+            this._logger.LogInformation("Response Data: " + System.Environment.NewLine + combined.ToString());
+            return Ok(ret);
         }
 
         //delete a file from database
@@ -121,12 +139,13 @@ namespace MFTFileManagment.Controllers
         [Route("DeleteFileFromDB")]
         public async Task<ActionResult<List<FileViewModel>>> DeleteFileFromDB(long id)
         {
+            this._logger.LogInformation("DeleteFileFromDB: " + id.ToString());
             var dbFile = await this._context.Files.FindAsync(id);
             if (dbFile == null)
                 return BadRequest("File not found!");
             this._context.Files.Remove(dbFile);
             await this._context.SaveChangesAsync();
-            return Ok(await this._context.Files.Select(f => new FileViewModel
+            var ret = await this._context.Files.Select(f => new FileViewModel
             {
                 Id = f.Id,
                 Name = f.Name,
@@ -135,7 +154,10 @@ namespace MFTFileManagment.Controllers
                 MakeBy = f.MakeBy,
                 MakeDate = f.MakeDate,
                 Remarks = f.Remarks
-            }).OrderBy(i => i.Id).ToListAsync());
+            }).OrderBy(i => i.Id).ToListAsync();
+            var combined = string.Join(", ", ret);
+            this._logger.LogInformation("Response Data: " + System.Environment.NewLine + combined.ToString());
+            return Ok(ret);
         }
 
 

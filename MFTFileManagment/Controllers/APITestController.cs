@@ -10,12 +10,14 @@ namespace MFTFileManagment.Controllers
 
         private readonly FileDataContext _context;
         private readonly ILogger<APITestController> _logger;
+        private readonly IConfiguration _config;
 
         //Dependency Injection through Constructor
-        public APITestController(FileDataContext context, ILogger<APITestController> logger)
+        public APITestController(FileDataContext context, ILogger<APITestController> logger, IConfiguration config)
         {
             this._context = context;
             _logger = logger;
+            _config = config;
         }
 
 
@@ -158,6 +160,44 @@ namespace MFTFileManagment.Controllers
             var combined = string.Join(", ", ret);
             this._logger.LogInformation("Response Data: " + System.Environment.NewLine + combined.ToString());
             return Ok(ret);
+        }
+
+
+        //Get all files from server
+        [HttpGet]
+        [Route("GetFilesFromServer")]
+        public ActionResult<List<string>> GetFilesFromServer()
+        {
+            this._logger.LogInformation("GetFilesFromServer: ");
+            var server = _config.GetValue<string>("SFTPHost");
+            var license = _config.GetValue<string>("SFTPLicense");
+            var port = Convert.ToInt32(_config.GetValue<string>("SFTPPort"));
+            var user = _config.GetValue<string>("SFTPUser");
+            var password = _config.GetValue<string>("SFTPPassword");
+            var localAttachmentPath = _config.GetValue<string>("LocalAttachmentPath");
+            var ret = SFTP.GetFileNamesfromServer(license, server, port, user, password);
+            var combined = string.Join(", ", ret);
+            this._logger.LogInformation("Response Data: " + System.Environment.NewLine + combined.ToString());
+            return Ok(ret);
+        }
+
+
+        //Get all files from server
+        [HttpPost]
+        [Route("DownloadFilesFromServer")]
+        public ActionResult<string> DownloadFilesFromServer()
+        {
+            this._logger.LogInformation("DownloadFilesFromServer: ");
+            var server = _config.GetValue<string>("SFTPHost");
+            var license = _config.GetValue<string>("SFTPLicense");
+            var port = Convert.ToInt32(_config.GetValue<string>("SFTPPort"));
+            var user = _config.GetValue<string>("SFTPUser");
+            var password = _config.GetValue<string>("SFTPPassword");
+            var localAttachmentPath = _config.GetValue<string>("LocalAttachmentPath");
+            var ret = SFTP.DownloadFileNamesfromServer(license, server, port, user, password, localAttachmentPath);
+
+            this._logger.LogInformation("Download Done!");
+            return Ok("Download Complete");
         }
 
 

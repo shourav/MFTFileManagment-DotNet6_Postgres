@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MFTFileManagment", "MFTFileManagment\MFTFileManagment.csproj", "{840E7183-DFAD-4EC9-99E1-30C0144C312A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documents.Data", "Documents.Data\Documents.Data.csproj", "{7AC3666D-A0CC-4889-BBFF-C78648DC24F5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{840E7183-DFAD-4EC9-99E1-30C0144C312A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{840E7183-DFAD-4EC9-99E1-30C0144C312A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{840E7183-DFAD-4EC9-99E1-30C0144C312A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{840E7183-DFAD-4EC9-99E1-30C0144C312A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AC3666D-A0CC-4889-BBFF-C78648DC24F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AC3666D-A0CC-4889-BBFF-C78648DC24F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AC3666D-A0CC-4889-BBFF-C78648DC24F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AC3666D-A0CC-4889-BBFF-C78648DC24F5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26F9F64F-7481-4C34-B5DB-A8077A37C86C}
+	EndGlobalSection
+EndGlobal

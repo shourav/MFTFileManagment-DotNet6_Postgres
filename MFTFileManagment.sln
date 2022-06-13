@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MFTFileManagment", "MFTFileManagment\MFTFileManagment.csproj", "{840E7183-DFAD-4EC9-99E1-30C0144C312A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MFTFileManagment", "MFTFileManagment\MFTFileManagment.csproj", "{840E7183-DFAD-4EC9-99E1-30C0144C312A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documents.Data", "Documents.Data\Documents.Data.csproj", "{7AC3666D-A0CC-4889-BBFF-C78648DC24F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.Data", "Documents.Data\Documents.Data.csproj", "{7AC3666D-A0CC-4889-BBFF-C78648DC24F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APISchudelerService", "APISchudelerService\APISchudelerService.csproj", "{7C02A37D-1C3A-4ECD-A70E-B557BCCC66BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7AC3666D-A0CC-4889-BBFF-C78648DC24F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AC3666D-A0CC-4889-BBFF-C78648DC24F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AC3666D-A0CC-4889-BBFF-C78648DC24F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C02A37D-1C3A-4ECD-A70E-B557BCCC66BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C02A37D-1C3A-4ECD-A70E-B557BCCC66BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C02A37D-1C3A-4ECD-A70E-B557BCCC66BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C02A37D-1C3A-4ECD-A70E-B557BCCC66BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

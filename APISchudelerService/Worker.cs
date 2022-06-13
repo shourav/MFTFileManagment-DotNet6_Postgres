@@ -14,7 +14,7 @@ namespace APISchudelerService
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-
+                //get api url data from appsettings
                 string server = _config.GetValue<string>("MFTAPIServer");
                 string port = _config.GetValue<string>("MFTAPIPort");
                 string api = _config.GetValue<string>("MFTAPI");
@@ -22,6 +22,8 @@ namespace APISchudelerService
                 string paramter = _config.GetValue<string>("MFTParameter");
                 string fullURL = server + ":" + port + api + "?" + paramter + "=" + makeBy;
                 _logger.LogInformation("{time}: Calling {string}", DateTimeOffset.Now, fullURL);
+                
+                //calling api every 1 minute
                 using (var httpClient = new HttpClient())
                 {
                     using (var response = await httpClient.PostAsync(fullURL, null))

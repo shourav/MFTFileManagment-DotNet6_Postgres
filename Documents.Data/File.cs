@@ -19,5 +19,7 @@ namespace Documents.Data
         public string MakeBy { get; set; } = string.Empty;
         public DateTime MakeDate { get; set; }
         public string Remarks { get; set; } = string.Empty;
+
+        public DateTime? CreationTime { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace MFTFileManagment.ViewModels
         public string Extension { get; set; }
         public string MakeBy { get; set; }
         public DateTime MakeDate { get; set; }
+        public DateTime? CreationTime { get; set; }
         public string Remarks { get; set; }
 
         public override string ToString()

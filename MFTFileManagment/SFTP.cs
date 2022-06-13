@@ -1,4 +1,5 @@
-﻿using MFTFileManagment.ViewModels;
+﻿using AutoMapper;
+using MFTFileManagment.ViewModels;
 using Rebex.IO;
 using Rebex.Net;
 
@@ -25,20 +26,12 @@ namespace MFTFileManagment
             return result;
         }
 
-        public static async Task<List<string>> DownloadFileNamesfromServer(string makeBy, FileDataContext context, string license, string server, int port, string user, string password, string localPath)
+        public static async Task<List<string>> DownloadFileNamesfromServer(string makeBy, FileDataContext context, IMapper mapper, string license, string server, int port, string user, string password, string localPath)
         {
             //first get list of all files saved in database
-            var dbFileList = await context.Files.Select(f => new FileViewModel
-            {
-                Id = f.Id,
-                Name = f.Name,
-                Path = f.Path,
-                Extension = f.Extension,
-                MakeBy = f.MakeBy,
-                MakeDate = f.MakeDate,
-                Remarks = f.Remarks,
-                CreationTime = f.CreationTime
-            }).ToListAsync();
+
+            var dbRecords = await context.Files.OrderBy(j => j.Id).ToListAsync();
+            var dbFileList = mapper.Map<List<FileViewModel>>(dbRecords);
             //setting Rebex License
             Rebex.Licensing.Key = license;
             //used to return saved file names

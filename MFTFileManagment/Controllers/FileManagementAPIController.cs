@@ -1,4 +1,5 @@
-﻿using MFTFileManagment.ViewModels;
+﻿using AutoMapper;
+using MFTFileManagment.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MFTFileManagment.Controllers
@@ -12,17 +13,19 @@ namespace MFTFileManagment.Controllers
         private readonly FileDataContext _context;
         private readonly ILogger<FileManagementAPIController> _logger;
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
 
         #endregion "Variables"
 
         #region "Constructor"
 
         //Dependency Injection through Constructor
-        public FileManagementAPIController(FileDataContext context, ILogger<FileManagementAPIController> logger, IConfiguration config)
+        public FileManagementAPIController(FileDataContext context, ILogger<FileManagementAPIController> logger, IConfiguration config, IMapper mapper)
         {
             this._context = context;
             _logger = logger;
             _config = config;
+            _mapper = mapper;
         }
 
         #endregion "Constructor"
@@ -35,17 +38,9 @@ namespace MFTFileManagment.Controllers
         public async Task<ActionResult<List<FileViewModel>>> GetFilesFromDB()
         {
             this._logger.LogInformation("GetFilesFromDB: ");
-            var ret = await this._context.Files.Select(f => new FileViewModel
-            {
-                Id = f.Id,
-                Name = f.Name,
-                Path = f.Path,
-                Extension = f.Extension,
-                MakeBy = f.MakeBy,
-                MakeDate = f.MakeDate,
-                Remarks = f.Remarks,
-                CreationTime = f.CreationTime
-            }).OrderBy(i => i.Id).ToListAsync();
+            var dbRecords = await this._context.Files.OrderBy(j => j.Id).ToListAsync();
+            var ret = _mapper.Map<List<FileViewModel>>(dbRecords);
+
             var combined = string.Join(", ", ret);
             this._logger.LogInformation("Response Data: " + System.Environment.NewLine + combined.ToString());
             return Ok(ret);
@@ -63,17 +58,7 @@ namespace MFTFileManagment.Controllers
                 this._logger.LogInformation("File not found!");
                 return BadRequest("File not found!");
             }
-            FileViewModel ret = new FileViewModel
-            {
-                Id = dbFile.Id,
-                Name = dbFile.Name,
-                Path = dbFile.Path,
-                Extension = dbFile.Extension,
-                MakeBy = dbFile.MakeBy,
-                MakeDate = dbFile.MakeDate,
-                Remarks = dbFile.Remarks,
-                CreationTime = dbFile.CreationTime
-            };
+            var ret = _mapper.Map<FileViewModel>(dbFile);
             this._logger.LogInformation("Response Data: " + System.Environment.NewLine + ret.ToString());
             return Ok(ret);
         }
@@ -84,28 +69,11 @@ namespace MFTFileManagment.Controllers
         public async Task<ActionResult<List<FileViewModel>>> AddFilesInDB(FileViewModel file)
         {
             this._logger.LogInformation("AddFilesInDB: " + System.Environment.NewLine + file.ToString());
-            this._context.Files.Add(new Documents.Data.File
-            {
-                Name = file.Name,
-                Path = file.Path,
-                Extension = file.Extension,
-                MakeBy = file.MakeBy,
-                MakeDate = DateTime.UtcNow,
-                Remarks = file.Remarks,
-                CreationTime = file.CreationTime
-            });
+            var dbFile = _mapper.Map<Documents.Data.File>(file);
+            this._context.Files.Add(dbFile);
             await this._context.SaveChangesAsync();
-            var ret = await this._context.Files.Select(f => new FileViewModel
-            {
-                Id = f.Id,
-                Name = f.Name,
-                Path = f.Path,
-                Extension = f.Extension,
-                MakeBy = f.MakeBy,
-                MakeDate = f.MakeDate,
-                Remarks = f.Remarks,
-                CreationTime = f.CreationTime
-            }).OrderBy(i => i.Id).ToListAsync();
+            var dbRecords = await this._context.Files.OrderBy(j => j.Id).ToListAsync();
+            var ret = _mapper.Map<List<FileViewModel>>(dbRecords);
             var combined = string.Join(", ", ret);
             this._logger.LogInformation("Response Data: " + System.Environment.NewLine + combined.ToString());
             return Ok(ret);
@@ -128,17 +96,8 @@ namespace MFTFileManagment.Controllers
             dbFile.Remarks = request.Remarks;
             dbFile.CreationTime = request.CreationTime;
             await this._context.SaveChangesAsync();
-            var ret = await this._context.Files.Select(f => new FileViewModel
-            {
-                Id = f.Id,
-                Name = f.Name,
-                Path = f.Path,
-                Extension = f.Extension,
-                MakeBy = f.MakeBy,
-                MakeDate = f.MakeDate,
-                Remarks = f.Remarks,
-                CreationTime = f.CreationTime
-            }).OrderBy(i => i.Id).ToListAsync();
+            var dbRecords = await this._context.Files.OrderBy(j => j.Id).ToListAsync();
+            var ret = _mapper.Map<List<FileViewModel>>(dbRecords);
             var combined = string.Join(", ", ret);
             this._logger.LogInformation("Response Data: " + System.Environment.NewLine + combined.ToString());
             return Ok(ret);
@@ -155,17 +114,8 @@ namespace MFTFileManagment.Controllers
                 return BadRequest("File not found!");
             this._context.Files.Remove(dbFile);
             await this._context.SaveChangesAsync();
-            var ret = await this._context.Files.Select(f => new FileViewModel
-            {
-                Id = f.Id,
-                Name = f.Name,
-                Path = f.Path,
-                Extension = f.Extension,
-                MakeBy = f.MakeBy,
-                MakeDate = f.MakeDate,
-                Remarks = f.Remarks,
-                CreationTime = f.CreationTime
-            }).OrderBy(i => i.Id).ToListAsync();
+            var dbRecords = await this._context.Files.OrderBy(j => j.Id).ToListAsync();
+            var ret = _mapper.Map<List<FileViewModel>>(dbRecords);
             var combined = string.Join(", ", ret);
             this._logger.LogInformation("Response Data: " + System.Environment.NewLine + combined.ToString());
             return Ok(ret);
@@ -183,7 +133,7 @@ namespace MFTFileManagment.Controllers
             foreach (var record in records)
             {
                 _context.Files.Remove(record);
-            } 
+            }
             await this._context.SaveChangesAsync();
 
             this._logger.LogInformation(ret);
@@ -232,7 +182,7 @@ namespace MFTFileManagment.Controllers
                                                 + " license: " + license
                                                 + " | Attempting to save in local folder: " + localAttachmentPath
                                                 );
-            var ret = await SFTP.DownloadFileNamesfromServer(makeBy, this._context, license, server, port, user, password, localAttachmentPath);
+            var ret = await SFTP.DownloadFileNamesfromServer(makeBy, this._context, _mapper, license, server, port, user, password, localAttachmentPath);
             var combined = string.Join(Environment.NewLine, ret);
             this._logger.LogInformation("Saved following files: " + Environment.NewLine + combined.ToString());
             return Ok(ret);
